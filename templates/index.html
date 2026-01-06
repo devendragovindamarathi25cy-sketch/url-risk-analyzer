@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>URL Risk Analyzer</title>
+    <style>
+        body {
+            background: #0f172a;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .box {
+            background: #020617;
+            padding: 25px;
+            border-radius: 12px;
+            width: 360px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0,0,0,0.6);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            border-radius: 6px;
+            border: none;
+            margin-bottom: 15px;
+        }
+
+        button {
+            width: 95%;
+            padding: 10px;
+            background: #38bdf8;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0ea5e9;
+        }
+
+        .result {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>URL Risk Analyzer (Python Only)</h2>
+
+    <form method="POST">
+        <input type="text" name="url" placeholder="Enter URL" required>
+        <button type="submit">Analyze</button>
+    </form>
+
+    {% if result %}
+    <div class="result">
+        <h3>Risk Level: {{ result.risk }}</h3>
+        <p>Score: {{ result.score }}</p>
+        <p>Risk Percentage: {{ result.risk_percent }}%</p>
+
+        {% if result.reasons %}
+        <ul>
+            {% for r in result.reasons %}
+            <li>{{ r }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No suspicious patterns found.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

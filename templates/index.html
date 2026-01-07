@@ -2,29 +2,69 @@
 <html>
 <head>
     <title>URL Risk Analyzer</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #0f172a;
+            color: white;
+            display: flex;
+            justify-content: center;
+            margin-top: 60px;
+        }
+        .box {
+            background: #020617;
+            padding: 25px;
+            width: 320px;
+            border-radius: 10px;
+        }
+        input, button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 15px;
+            background: #020617;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        ul { padding-left: 18px; }
+    </style>
 </head>
 <body>
 
-<h2>URL Risk Analyzer</h2>
+<div class="box">
+    <h3>URL Risk Analyzer</h3>
 
-<form method="POST">
-    <input type="text" name="url" placeholder="Enter URL" required>
-    <button type="submit">Analyze</button>
-</form>
+    <form method="POST">
+        <input type="text" name="url" placeholder="Enter URL" value="{{ url }}" required>
+        <button type="submit">Analyze</button>
+    </form>
 
-{% if risk %}
-<hr>
-<p><strong>Risk Level:</strong> {{ risk }}</p>
-<p><strong>Score:</strong> {{ score }}</p>
+    {% if result %}
+    <div class="result">
+        <p><b>Risk Level:</b> {{ result }}</p>
+        <p><b>Score:</b> {{ score }}</p>
 
-{% if reasons %}
-<ul>
-    {% for r in reasons %}
-        <li>{{ r }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
-{% endif %}
+        {% if reasons %}
+        <p><b>Reasons:</b></p>
+        <ul>
+            {% for r in reasons %}
+            <li>{{ r }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No suspicious patterns found.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
 
 </body>
 </html>

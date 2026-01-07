@@ -12,8 +12,18 @@
     <button type="submit">Analyze</button>
 </form>
 
-{% if result %}
-    <p><strong>Result:</strong> {{ result }}</p>
+{% if risk %}
+<hr>
+<p><strong>Risk Level:</strong> {{ risk }}</p>
+<p><strong>Score:</strong> {{ score }}</p>
+
+{% if reasons %}
+<ul>
+    {% for r in reasons %}
+        <li>{{ r }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 {% endif %}
 
 </body>

@@ -7,32 +7,23 @@ def analyze_url(url):
     score = 0
     reasons = []
 
-    # Rule 1: HTTPS check
     if not url.startswith("https://"):
         score += 1
         reasons.append("HTTPS not used")
 
-    # Rule 2: URL shorteners
-    shorteners = ["bit.ly", "tinyurl", "t.co", "goo.gl"]
-    if any(s in url for s in shorteners):
+    if re.search(r"(bit\.ly|tinyurl|t\.co|cutt\.ly)", url):
         score += 1
         reasons.append("URL shortener used")
 
-    # Rule 3: Suspicious words
-    suspicious_words = ["login", "verify", "secure", "account", "update"]
-    if any(word in url.lower() for word in suspicious_words):
+    if re.search(r"(login|verify|secure|account|update)", url, re.I):
         score += 1
-        reasons.append("Suspicious keyword found")
+        reasons.append("Suspicious keywords found")
 
-    # Rule 4: IP-based URL
-    if re.match(r"https?://\d+\.\d+\.\d+\.\d+", url):
-        score += 1
-        reasons.append("IP address used instead of domain")
-
-    # Risk level
-    if score <= 1:
+    if score == 0:
+        risk = "Safe"
+    elif score == 1:
         risk = "Low Risk"
-    elif score <= 3:
+    elif score == 2:
         risk = "Medium Risk"
     else:
         risk = "High Risk"
@@ -42,7 +33,9 @@ def analyze_url(url):
 
 @app.route("/", methods=["GET", "POST"])
 def home():
-    risk = score = reasons = None
+    risk = None
+    score = None
+    reasons = None
 
     if request.method == "POST":
         url = request.form.get("url")
@@ -58,4 +51,4 @@ def home():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+    app.run()

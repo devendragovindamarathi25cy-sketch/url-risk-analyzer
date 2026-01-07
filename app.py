@@ -7,31 +7,32 @@ def analyze_url(url):
     score = 0
     reasons = []
 
-    if re.search(r"https?://\d+\.\d+\.\d+\.\d+", url):
-        score += 2
-        reasons.append("IP address detected")
-
-    if re.search(r"(bit\.ly|tinyurl|t\.co|goo\.gl)", url):
-        score += 2
-        reasons.append("URL shortener used")
-
-    if re.search(r"(login|verify|secure|account|update)", url.lower()):
-        score += 1
-        reasons.append("Suspicious keywords found")
-
-    if url.count('.') > 4:
-        score += 1
-        reasons.append("Too many dots in URL")
-
+    # Rule 1: HTTPS check
     if not url.startswith("https://"):
         score += 1
         reasons.append("HTTPS not used")
 
-    if score == 0:
-        risk = "Safe"
-    elif score <= 2:
+    # Rule 2: URL shorteners
+    shorteners = ["bit.ly", "tinyurl", "t.co", "goo.gl"]
+    if any(s in url for s in shorteners):
+        score += 1
+        reasons.append("URL shortener used")
+
+    # Rule 3: Suspicious words
+    suspicious_words = ["login", "verify", "secure", "account", "update"]
+    if any(word in url.lower() for word in suspicious_words):
+        score += 1
+        reasons.append("Suspicious keyword found")
+
+    # Rule 4: IP-based URL
+    if re.match(r"https?://\d+\.\d+\.\d+\.\d+", url):
+        score += 1
+        reasons.append("IP address used instead of domain")
+
+    # Risk level
+    if score <= 1:
         risk = "Low Risk"
-    elif score <= 4:
+    elif score <= 3:
         risk = "Medium Risk"
     else:
         risk = "High Risk"
@@ -41,20 +42,20 @@ def analyze_url(url):
 
 @app.route("/", methods=["GET", "POST"])
 def home():
-    result = ""
-    score = ""
-    reasons = []
+    risk = score = reasons = None
 
     if request.method == "POST":
         url = request.form.get("url")
-        result, score, reasons = analyze_url(url)
+        if url:
+            risk, score, reasons = analyze_url(url)
 
     return render_template(
         "index.html",
-        result=result,
+        risk=risk,
         score=score,
         reasons=reasons
     )
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)

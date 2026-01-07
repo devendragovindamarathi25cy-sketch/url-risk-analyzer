@@ -4,26 +4,17 @@
     <title>URL Risk Analyzer</title>
 </head>
 <body>
-    <h2>URL Risk Analyzer</h2>
 
-    <form method="POST">
-        <input type="text" name="url" placeholder="Enter URL" required>
-        <button type="submit">Analyze</button>
-    </form>
+<h2>URL Risk Analyzer</h2>
 
-    {% if result %}
-        <h3>Risk Level: {{ result }}</h3>
-        <p>Score: {{ score }}</p>
+<form method="POST">
+    <input type="text" name="url" placeholder="Enter URL" required>
+    <button type="submit">Analyze</button>
+</form>
 
-        {% if reasons %}
-            <ul>
-                {% for r in reasons %}
-                    <li>{{ r }}</li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No suspicious patterns found.</p>
-        {% endif %}
-    {% endif %}
+{% if result %}
+    <p><strong>Result:</strong> {{ result }}</p>
+{% endif %}
+
 </body>
 </html>
